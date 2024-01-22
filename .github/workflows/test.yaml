@@ -7,20 +7,22 @@ on:
 jobs:
   build:
     runs-on: "windows-latest"
-    shell: "cmd"
 
     steps:
       - name: "Print path"
+        shell: "cmd"
         run: |
           echo Github path %GITHUB_PATH%
           echo Path %PATH%
 
       - name: "Update path"
+        shell: "cmd"
         run: |
           set "GITHUB_PATH=%GIT_PATH%;C:\my\custom\path"
           set "PATH=%PATH%;C:\my\custom\path"
 
       - name: "Print path again"
+        shell: "cmd"
         run: |
           echo Github path %GITHUB_PATH%
           echo Path %PATH%
