@@ -12,17 +12,15 @@ jobs:
       - name: "Print path"
         shell: "cmd"
         run: |
-          echo Github path %GITHUB_PATH%
-          echo Path %PATH%
+          echo Path1 %PATH%
 
       - name: "Update path"
         shell: "cmd"
         run: |
-          set "GITHUB_PATH=%GIT_PATH%;C:\my\custom\path"
-          set "PATH=%PATH%;C:\my\custom\path"
+          echo "C:\my\custom\path" >> %GITHUB_PATH%
+          echo Path2 %PATH%
 
       - name: "Print path again"
         shell: "cmd"
         run: |
-          echo Github path %GITHUB_PATH%
-          echo Path %PATH%
+          echo Path3 %PATH%
