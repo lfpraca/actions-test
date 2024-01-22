@@ -1,0 +1,26 @@
+name: "Runs some tests"
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  build:
+    runs-on: "windows-latest"
+    shell: "cmd"
+
+    steps:
+      - name: "Print path"
+        run: |
+          echo Github path %GITHUB_PATH%
+          echo Path %PATH%
+
+      - name: "Update path"
+        run: |
+          set "GITHUB_PATH=%GIT_PATH%;C:\my\custom\path"
+          set "PATH=%PATH%;C:\my\custom\path"
+
+      - name: "Print path again"
+        run: |
+          echo Github path %GITHUB_PATH%
+          echo Path %PATH%
