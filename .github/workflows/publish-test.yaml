@@ -11,56 +11,7 @@ jobs:
       PRODUCT_VERSION: ${{ github.ref_name }}
 
     steps:
-      - name: "Activate pnpm"
+      - name: "Print variable"
         shell: "cmd"
         run: |-
-          corepack enable pnpm
-
-      - name: "Install i686 Rust Target"
-        shell: "cmd"
-        run: |-
-          rustup target add i686-pc-windows-gnu
-
-      - name: "Install MSYS Tools"
-        shell: "cmd"
-        run: |-
-          C:\msys64\usr\bin\bash.exe -l -c "pacman -S --noconfirm mingw64/mingw-w64-x86_64-binutils mingw64/mingw-w64-x86_64-gcc mingw32/mingw-w64-i686-binutils mingw32/mingw-w64-i686-gcc"
-
-          echo C:\msys64\mingw64\bin>> %GITHUB_PATH%
-          echo C:\msys64\mingw32\bin>> %GITHUB_PATH%
-
-      - name: "Install Makers"
-        shell: "cmd"
-        run: |-
-          curl --proto =https --tlsv1.2 -sSfL https://github.com/sagiegurari/cargo-make/releases/download/0.37.7/cargo-make-v0.37.7-x86_64-pc-windows-msvc.zip > makers.zip
-          tar -xf makers.zip -C %HOMEDRIVE%%HOMEPATH%\.cargo\bin
-          del /Q makers.zip
-
-          del /Q %HOMEDRIVE%%HOMEPATH%\.cargo\bin\LICENSE
-          del /Q %HOMEDRIVE%%HOMEPATH%\.cargo\bin\README.md
-
-      - name: "Verify Installations"
-        shell: "cmd"
-        run: |-
-          node --version
-          pnpm --version
-          rustc --version
-          x86_64-w64-mingw32-g++ --version
-          i686-w64-mingw32-g++ --version
-          makers --version
-          aws --version
-
-      - name: "Checkout code"
-        uses: "actions/checkout@v4"
-
-      - name: "Build"
-        shell: "cmd"
-        run: |-
-          makers execute
-
-      - name: "Not so secret number"
-        shell: "cmd"
-        env:
-          MY_NUMBER: ${{ secrets.SECRET_NUMBER }}
-        run: |-
-          makers number
+          echo ${{ vars.MY_VARIABLE }}
