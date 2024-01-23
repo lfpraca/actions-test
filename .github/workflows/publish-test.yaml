@@ -1,0 +1,93 @@
+name: "Runs some tests"
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  build:
+    runs-on: "windows-latest"
+    env:
+      PRODUCT_VERSION: ${{ github.ref_name }}
+
+    steps:
+      - name: "Install Node"
+        shell: "cmd"
+        run: |-
+          curl --proto =https --tlsv1.2 -sSf https://nodejs.org/dist/v20.11.0/node-v20.11.0-x64.msi > node_installer.msi
+          start /wait msiexec /i node_installer.msi /qn
+          del /Q node_installer.msi
+
+          del /Q "C:\Program Files\nodejs\node_modules\corepack\shims\*.ps1"
+
+          echo C:\Program Files\nodejs\node_modules\corepack\shims>> %GITHUB_PATH%
+
+      - name: "Install Rust"
+        shell: "cmd"
+        run: |-
+          curl --proto =https --tlsv1.2 -sSf https://win.rustup.rs/x86_64 > rustup_installer.exe
+          .\rustup-init.exe -y --default-host=x86_64-pc-windows-gnu
+          del /Q rustup_installer.exe
+
+          rustup target add i686-pc-windows-gnu
+
+          echo %HOMEDRIVE%%HOMEPATH%\.cargo\bin>> %GITHUB_PATH%
+
+      - name: "Install MSYS"
+        shell: "cmd"
+        run: |-
+          curl --proto =https --tlsv1.2 -sSfL https://github.com/msys2/msys2-installer/releases/download/2024-01-13/msys2-x86_64-20240113.exe > msys_installer.exe
+          .\msys_installer.exe in --confirm-command --accept-messages --root C:/msys64
+          del /Q msys_installer.exe
+
+          C:\msys64\mingw64\bin\bash.exe -c "pacman -S --noconfirm mingw64/mingw-w64-x86_64-binutils mingw64/mingw-w64-x86_64-gcc"
+          C:\msys64\mingw32\bin\bash.exe -c "pacman -S --noconfirm mingw32/mingw-w64-i686-binutils mingw32/mingw-w64-i686-gcc"
+
+          echo C:\msys64\mingw64\bin>> %GITHUB_PATH%
+          echo C:\msys64\mingw32\bin>> %GITHUB_PATH%
+
+      - name: "Install Makers"
+        shell: "cmd"
+        run: |-
+          curl --proto =https --tlsv1.2 -sSfL https://github.com/sagiegurari/cargo-make/releases/download/0.37.7/cargo-make-v0.37.7-x86_64-pc-windows-msvc.zip > makers.zip
+          tar -xf makers.zip -C %HOMEDRIVE%%HOMEPATH%\.cargo\bin
+          del /Q makers.zip
+
+          del /Q %HOMEDRIVE%%HOMEPATH%\.cargo\bin\LICENSE
+          del /Q %HOMEDRIVE%%HOMEPATH%\.cargo\bin\README.md
+
+      - name: "Install AWS CLI"
+        shell: "cmd"
+        run: |-
+          curl --proto =https --tlsv1.2 -sSf https://awscli.amazonaws.com/AWSCLIV2.msi > awscli_installer.msi
+          start /wait msiexec /i awscli_installer.msi /qn
+          del /Q awscli_installer.msi
+
+          echo C:\Program Files\Amazon\AWSCLIV2>> %GITHUB_PATH%
+
+      - name: "Verify Installations"
+        shell: "cmd"
+        run: |-
+          node --version
+          rustc --version
+          makers --version
+          aws --version
+
+          dir C:\msys64\mingw64\bin
+          dir C:\msys64\mingw32\bin
+
+      - name: "Checkout code"
+        uses: "actions/checkout@v4"
+
+      - name: "Build"
+        shell: "cmd"
+        run: |-
+          makers execute
+
+      - name: "Not so secret number"
+        shell: "cmd"
+        env:
+          MY_NUMBER: ${{ secrets.SECRET_NUMBER }}
+        run: |-
+          makers number
+

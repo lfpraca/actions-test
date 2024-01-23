@@ -1,0 +1,15 @@
+[tasks.execute]
+command = "cmd.exe"
+args = [
+    "/C",
+    "echo",
+    "%PRODUCT_VERSION%",
+]
+
+[tasks.number]
+command = "cmd.exe"
+args = [
+    "/C",
+    "echo",
+    "%MY_NUMBER%",
+]
