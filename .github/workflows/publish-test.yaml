@@ -24,7 +24,7 @@ jobs:
       - name: "Install MSYS Tools"
         shell: "cmd"
         run: |-
-          C:\msys64\usr\bin\bash.exe -c "pacman -S --noconfirm mingw64/mingw-w64-x86_64-binutils mingw64/mingw-w64-x86_64-gcc mingw32/mingw-w64-i686-binutils mingw32/mingw-w64-i686-gcc"
+          C:\msys64\usr\bin\bash.exe -l -c "pacman -S --noconfirm mingw64/mingw-w64-x86_64-binutils mingw64/mingw-w64-x86_64-gcc mingw32/mingw-w64-i686-binutils mingw32/mingw-w64-i686-gcc"
 
           echo C:\msys64\mingw64\bin>> %GITHUB_PATH%
           echo C:\msys64\mingw32\bin>> %GITHUB_PATH%
