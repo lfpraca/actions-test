@@ -7,20 +7,16 @@ on:
 jobs:
   build:
     runs-on: "windows-latest"
+    env:
+      PRODUCT_VERSION: ${{ github.ref_name }}
 
     steps:
-      - name: "Print path"
+      - name: "Print PWD"
         shell: "cmd"
         run: |
-          echo Path1 %PATH%
+          echo PWD %CD%
 
-      - name: "Update path"
+      - name: "Print Version"
         shell: "cmd"
         run: |
-          echo "C:\my\custom\path" >> %GITHUB_PATH%
-          echo Path2 %PATH%
-
-      - name: "Print path again"
-        shell: "cmd"
-        run: |
-          echo Path3 %PATH%
+          echo version %PRODUCT_VERSION%
