@@ -11,7 +11,12 @@ jobs:
       PRODUCT_VERSION: ${{ github.ref_name }}
 
     steps:
-      - name: "Print variable"
+      - name: "Print rust targets"
         shell: "cmd"
         run: |-
-          echo ${{ vars.MY_VARIABLE }}
+          rustup toolchain list
+
+      - name: "Test JSON presence perl"
+        shell: "perl {0}"
+        run: |-
+          use JSON;
