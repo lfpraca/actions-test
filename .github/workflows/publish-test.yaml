@@ -11,13 +11,7 @@ jobs:
       PRODUCT_VERSION: ${{ github.ref_name }}
 
     steps:
-      - name: "Add to path"
-        shell: "cmd"
+      - name: "Test for webview"
+        shell: "pwsh"
         run: |-
-          echo C:\msys64\mingw64\bin>> %GITHUB_PATH%
-          echo C:\msys64\mingw32\bin>> %GITHUB_PATH%
-
-      - name: "Echo path"
-        shell: "cmd"
-        run: |-
-          echo %PATH%
+          if (Test-Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}") { Write-Host "Registry key exists." } else { Write-Host "Registry key does not exist." }
